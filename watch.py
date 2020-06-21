@@ -68,7 +68,7 @@ def get_post_date(post):
     return datetime.fromtimestamp(post['created_utc'])
 
 def get_upvote_count(post):
-    return post['ups']
+    return post['ups'] - post['downs']
 
 PREV_ALERTED_DATA = {sr['name']: {'top': None, 'new': None} for sr in SUBREDDITS}
 def update_with_alerts(subreddit):
@@ -87,14 +87,14 @@ def update_with_alerts(subreddit):
             print(f'{bcolors.GREEN}Top Post in {subreddit["name"]} (age = {top_age}) ({top_date}): {top["title"]} (https://reddit.com/{top["permalink"]}){bcolors.ENDC}')
     found_new = False
     count_new = 0
-    max_upvotes = 0
+    max_upvotes = None
     for post in get_url(REDDIT_NEW_URL % subreddit['name']):
-        count_new += 1
         post_date = get_post_date(post)
         post_age = datetime.now() - post_date
         if post_age <= subreddit['recent_posts_max_age']: # there's a new post!
+            count_new += 1
             upvotes = get_upvote_count(post)
-            max_upvotes = max(upvotes, max_upvotes)
+            max_upvotes = max(upvotes, max_upvotes) if max_upvotes is not None else upvotes
             if upvotes >= subreddit['recent_posts_min_upvotes']: # with a lot of upvotes!
                 found_new = True
                 if PREV_ALERTED_DATA[subreddit['name']]['new'] != post['title']:
