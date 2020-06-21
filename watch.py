@@ -1,5 +1,6 @@
 #!/usr/bin/env python3
-import requests, time, re, sys, dateutil.parser, itertools, os
+# REQUIREMENTS: pip install requests
+import requests, time, re, sys, itertools, os
 from datetime import datetime, timedelta
 
 SUBREDDITS = [{'name': 'slatestarcodex',
