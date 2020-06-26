@@ -9,6 +9,10 @@ EXE:=$(shell $(PYTHON) -c 'from PyInstaller.compat import is_win, is_cygwin; pri
 exe: watch$(EXE)
 .PHONY: exe
 
+copy-exe: watch$(EXE)
+	cp -t "$(OUTPUT)" watch$(EXE)
+.PHONY: copy-exe
+
 watch$(EXE): dist/watch_gui$(EXE)
 	cp $< $@
 

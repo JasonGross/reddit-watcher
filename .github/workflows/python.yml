@@ -37,9 +37,7 @@ jobs:
         pytest
       continue-on-error: true
     - run: make exe
-    - run: |
-        mkdir ${{ matrix.os }}
-        cp watch.exe ${{ matrix.os }}/
+    - run: make copy-exe OUTPUT=${{ matrix.os }}
     - name: Deploy exes
       uses: JamesIves/github-pages-deploy-action@releases/v3
       with:
