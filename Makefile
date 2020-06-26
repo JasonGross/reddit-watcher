@@ -10,6 +10,7 @@ exe: watch$(EXE)
 .PHONY: exe
 
 copy-exe: watch$(EXE)
+	mkdir -p "$(OUTPUT)"
 	cp -t "$(OUTPUT)" watch$(EXE)
 .PHONY: copy-exe
 
