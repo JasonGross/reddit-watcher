@@ -127,3 +127,9 @@ dmypy.json
 
 # Pyre type checker
 .pyre/
+
+# custom files
+/reddit-watcher-conf.ini
+
+# misc
+*~
