@@ -24,7 +24,9 @@ jobs:
         pip install flake8 pytest
         pip install PyInstaller
         pip install -r requirements.txt
-    - run: pip install pipwin
+    - run: |
+        pip install pipwin
+        choco install rsync
       if: matrix.os == 'windows-latest'
     - name: Lint with flake8
       run: |
