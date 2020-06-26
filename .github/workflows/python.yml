@@ -37,11 +37,11 @@ jobs:
         pytest
       continue-on-error: true
     - run: make exe
-    - run: make copy-exe OUTPUT=${{ matrix.os }}
+    - run: make copy-exe OUTPUT=deploy/${{ matrix.os }}
     - name: Deploy exes
       uses: JamesIves/github-pages-deploy-action@releases/v3
       with:
         ACCESS_TOKEN: ${{ secrets.ACCESS_TOKEN }}
         BRANCH: gh-pages
-        FOLDER: ${{ matrix.os }}
+        FOLDER: deploy
       if: github.ref == 'refs/heads/master' && github.event_name == 'push'
