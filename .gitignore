@@ -130,6 +130,7 @@ dmypy.json
 
 # custom files
 /reddit-watcher-conf.ini
+/*.exe
 
 # misc
 *~
