@@ -11,7 +11,7 @@ exe: watch$(EXE)
 
 copy-exe: watch$(EXE)
 	mkdir -p "$(OUTPUT)"
-	cp -t "$(OUTPUT)" watch$(EXE)
+	cp watch$(EXE) "$(patsubst %/,%,$(OUTPUT))/"
 .PHONY: copy-exe
 
 watch$(EXE): dist/watch_gui$(EXE)
