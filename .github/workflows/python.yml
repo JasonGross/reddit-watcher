@@ -24,7 +24,8 @@ jobs:
         pip install flake8 pytest
         pip install PyInstaller
         pip install -r requirements.txt
-    - run: |
+    - name: Install Windows-specific requirements
+      run: |
         pip install pipwin
         choco install rsync
       if: matrix.os == 'windows-latest'
