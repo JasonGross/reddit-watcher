@@ -46,4 +46,5 @@ jobs:
         github_token: ${{ secrets.GITHUB_TOKEN }}
         publish_branch: gh-pages
         publish_dir: deploy
+        keep_files: true
       if: github.ref == 'refs/heads/master' && github.event_name == 'push'
