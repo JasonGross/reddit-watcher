@@ -1,8 +1,10 @@
 #!/usr/bin/env python3
 if __name__ == '__main__':
     try:
-        import logging, time
-        import watch, watch_config
+        import logging
+        import time
+        import watch
+        import watch_config
 
         format = "%(asctime)s: %(message)s"
         logging.basicConfig(format=format, level=logging.INFO,

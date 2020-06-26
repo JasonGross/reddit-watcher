@@ -1,13 +1,17 @@
-import os, json, sys, logging
+import os
+import json
+import sys
+import logging
 import watch
-from datetime import datetime, timedelta
+from datetime import timedelta
 
 __all__ = ['CONF_FILE', 'CONFIG_VERSION', 'load_configuration', 'save_configuration']
+
 
 # https://stackoverflow.com/a/42615559/377022
 if getattr(sys, 'frozen', False):
     # If the application is run as a bundle, the PyInstaller bootloader
-    # extends the sys module by a flag frozen=True and sets the app 
+    # extends the sys module by a flag frozen=True and sets the app
     # path into variable _MEIPASS'.
     #
     # Using sys._MEIPASS does not work for one-file executables. From
@@ -23,12 +27,14 @@ CONF_FILE = os.path.join(os.path.dirname(os.path.abspath(application)), 'reddit-
 
 CONFIG_VERSION = '0.0.1'
 
+
 def get_current_configuration():
     return {'CONFIG_VERSION': CONFIG_VERSION,
             'SUBREDDITS': {'description': 'The list of subreddits and the data about them',
                            'value': watch.SUBREDDITS},
             'REFRESH_RATE': {'description': 'How often to re-poll reddit and refresh the display (in seconds)',
                              'value': watch.REFRESH_RATE_IN_SECONDS}}
+
 
 def validate_subreddits(subs):
     if subs is None: return False
@@ -45,11 +51,12 @@ def validate_subreddits(subs):
                 logging.error(f'Invalid configuration: missing key "{k}" in subreddit value {s}')
                 return False
             try:
-                t = timedelta(**(s[k]))
+                _ = timedelta(**(s[k]))
             except Exception as e:
                 logging.error(f'Invalid configuration: key "{k}" does not contain valid arguments to timedelta ({e}): timedelta(**{s[k]})')
                 return False
     return True
+
 
 def validate_refresh(refresh):
     if refresh is None: return False
@@ -57,6 +64,7 @@ def validate_refresh(refresh):
         logging.error(f'Invalid configuration: refresh rate is not an integer: {refresh}')
         return False
     return True
+
 
 def update_with_configuration(config):
     if 'CONFIG_VERSION' not in config.keys():
@@ -76,10 +84,12 @@ def update_with_configuration(config):
             logging.error(f'Invalid configuration (exception in config["REFRESH_RATE"]["value"]: {e}):\n{config}')
         if validate_refresh(refresh): watch.REFRESH_RATE_IN_SECONDS = refresh
 
+
 def backup(fname, bak='.bak'):
     if bak is None: return
     if os.path.exists(fname + bak): backup(fname + bak, bak=bak)
     os.rename(fname, fname + bak)
+
 
 def save_file(contents, fname, bak='.bak'):
     if os.path.exists(fname):
@@ -89,8 +99,10 @@ def save_file(contents, fname, bak='.bak'):
     with open(fname, 'w') as f:
         f.write(contents)
 
+
 def save_configuration():
     save_file(json.dumps(get_current_configuration(), sort_keys=True, indent=2), CONF_FILE)
+
 
 def load_configuration():
     try:
