@@ -33,4 +33,14 @@ jobs:
       run: |
         pytest
     - run: make exe
-    
+    - run: |
+        mkdir ${{ matrix.os }}
+        cp watch.exe ${{ matrix.os }}/
+    - name: Deploy exes
+      uses: JamesIves/github-pages-deploy-action@releases/v3
+      with:
+        ACCESS_TOKEN: ${{ secrets.ACCESS_TOKEN }}
+        BRANCH: gh-pages
+        FOLDER: ${{ matrix.os }}
+      if: github.ref == 'refs/heads/master' && github.event_name == 'push'
+
