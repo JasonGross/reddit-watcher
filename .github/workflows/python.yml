@@ -1,4 +1,4 @@
-name: Python
+name: CI (Python)
 
 on:
   push:
@@ -40,6 +40,9 @@ jobs:
       continue-on-error: true
     - run: make exe
     - run: make copy-exe OUTPUT=deploy/${{ matrix.os }}
+    - name: Sleep to avoid collisions
+      run: sleep 60
+      if: matrix.os == 'macos-latest'
     - name: Deploy exes
       uses: peaceiris/actions-gh-pages@v3
       with:
