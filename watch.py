@@ -3,7 +3,7 @@
 import requests, time, re, sys, itertools, os
 from datetime import datetime, timedelta
 
-__all__ = ['SUBREDDITS', 'REFRESH_RATE_IN_SECONDS', 'set_subreddts', 'set_refresh_rate', 'refresh_sleep']
+__all__ = ['SUBREDDITS', 'REFRESH_RATE_IN_SECONDS', 'set_subreddits', 'set_refresh_rate', 'refresh_sleep']
 
 SUBREDDITS = [{'name': 'slatestarcodex',
                # alert when the top post is at least this old
