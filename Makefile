@@ -17,8 +17,12 @@ copy-exe: watch$(EXE)
 watch$(EXE): dist/watch_gui$(EXE)
 	cp $< $@
 
-dist/watch_gui$(EXE): watch.py watch_config.py watch_gui.py
+dist/watch_gui$(EXE): watch.py watch_config.py watch_gui.py watch_version.py
 	pyinstaller --onefile watch_gui.py
+
+.PHONY: update-version
+update-version:
+	$(PYTHON) ./update_version.py
 
 .PHONY: deps
 deps::
