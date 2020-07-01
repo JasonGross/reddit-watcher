@@ -12,7 +12,8 @@ if __name__ == '__main__':
         logging.info(f'Using configuration file {watch_config.CONF_FILE}, CONFIG_VERSION: {watch_config.CONFIG_VERSION}')
         watch_config.load_configuration()
         time.sleep(10)
-        watch.refresh_sleep_console()
+        while True:
+            watch.refresh_sleep_console()
     except KeyboardInterrupt as e:
         raise e
     except Exception as e:
