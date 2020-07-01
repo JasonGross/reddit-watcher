@@ -1,4 +1,4 @@
-PYTHON?=python
+PYTHON?=$(shell which python3 2>/dev/null || echo python)
 
 run:
 	$(PYTHON) ./watch.py
