@@ -101,20 +101,20 @@ def make_green_console(s): return f'{bcolors.GREEN}{s}{bcolors.ENDC}'
 
 
 PREV_ALERTED_DATA = {sr['name']: {'top': None, 'new': None} for sr in SUBREDDITS}
-def get_alerts(subreddit, make_bold, make_red, make_green):
+def get_alerts(subreddit, make_bold, make_match, make_no_match):
     yield make_bold(f'subreddit {subreddit["name"]}:')
     for top in itertools.islice(get_url(REDDIT_TOP_URL % subreddit['name']), 1):  # if there are no top posts, don't error
         top_date = get_post_date(top)
         top_age = datetime.now() - top_date
         if top_age < timedelta(**subreddit['top_post_min_age']):  # there's a new post!
             if PREV_ALERTED_DATA[subreddit['name']]['top'] != top['title']:
-                yield make_red(f'Top Post in {subreddit["name"]} is new (age = {top_age}) ({top_date}): {top["title"]} (https://reddit.com/{top["permalink"]})')
+                yield make_match(f'Top Post in {subreddit["name"]} is new (age = {top_age}) ({top_date}): {top["title"]} (https://reddit.com/{top["permalink"]})')
                 yield ALERT_STRING
             else:
-                yield make_red(f'Top Post in {subreddit["name"]} (age = {top_age}) ({top_date}): {top["title"]} (https://reddit.com/{top["permalink"]})')
+                yield make_match(f'Top Post in {subreddit["name"]} (age = {top_age}) ({top_date}): {top["title"]} (https://reddit.com/{top["permalink"]})')
             PREV_ALERTED_DATA[subreddit['name']]['top'] = top['title']
         else:
-            yield make_green(f'Top Post in {subreddit["name"]} (age = {top_age}) ({top_date}): {top["title"]} (https://reddit.com/{top["permalink"]})')
+            yield make_no_match(f'Top Post in {subreddit["name"]} (age = {top_age}) ({top_date}): {top["title"]} (https://reddit.com/{top["permalink"]})')
     found_new = False
     count_new = 0
     max_upvotes = None
@@ -128,10 +128,10 @@ def get_alerts(subreddit, make_bold, make_red, make_green):
             if upvotes >= subreddit['recent_posts_min_upvotes']:  # with a lot of upvotes!
                 found_new = True
                 if PREV_ALERTED_DATA[subreddit['name']]['new'] != post['title']:
-                    yield make_red(f'New Post in {subreddit["name"]} is newly (age = {post_age}) ({top_date}) upvoted ({upvotes}): {top["title"]} (https://reddit.com/{top["permalink"]})')
+                    yield make_match(f'New Post in {subreddit["name"]} is newly (age = {post_age}) ({top_date}) upvoted ({upvotes}): {top["title"]} (https://reddit.com/{top["permalink"]})')
                     yield ALERT_STRING
                 else:
-                    yield make_red(f'New Post in {subreddit["name"]} (age = {post_age}) ({top_date}) is upvoted ({upvotes}): {top["title"]} (https://reddit.com/{top["permalink"]})')
+                    yield make_match(f'New Post in {subreddit["name"]} (age = {post_age}) ({top_date}) is upvoted ({upvotes}): {top["title"]} (https://reddit.com/{top["permalink"]})')
                 PREV_ALERTED_DATA[subreddit['name']]['new'] = post['title']
             else:
                 continue
@@ -139,7 +139,7 @@ def get_alerts(subreddit, make_bold, make_red, make_green):
             break
     if not found_new:
         PREV_ALERTED_DATA[subreddit['name']]['new'] = None
-        yield make_green(f'All {count_new} recent (<= {timedelta(**subreddit["recent_posts_max_age"])}) posts in {subreddit["name"]} have less than {subreddit["recent_posts_min_upvotes"]} upvotes (max = {max_upvotes})')
+        yield make_no_match(f'All {count_new} recent (<= {timedelta(**subreddit["recent_posts_max_age"])}) posts in {subreddit["name"]} have less than {subreddit["recent_posts_min_upvotes"]} upvotes (max = {max_upvotes})')
 
 
 def get_all_alerts(*args, **kwargs):
@@ -159,16 +159,16 @@ def alert_console(): print(ALERT_STRING, end='')
 def printline_console(s): print(s)
 
 
-def refresh(cleartext, alert, printline, printsleep, make_bold, make_red, make_green):
+def refresh(cleartext, alert, printline, printsleep, make_bold, make_match, make_no_match):
     cleartext()
-    for line in get_all_alerts(make_bold=make_bold_console, make_red=make_red_console, make_green=make_green_console):
+    for line in get_all_alerts(make_bold=make_bold_console, make_match=make_match, make_no_match=make_no_match):
         if line == ALERT_STRING: alert()
         else: printline(line)
 
 
-def refresh_sleep(cleartext, alert, printline, printsleep, make_bold, make_red, make_green):
+def refresh_sleep(cleartext, alert, printline, printsleep, make_bold, make_match, make_no_match):
     cur_time = time.time()
-    refresh(cleartext=cleartext, alert=alert, printline=printline, printsleep=printsleep, make_bold=make_bold, make_red=make_red, make_green=make_green)
+    refresh(cleartext=cleartext, alert=alert, printline=printline, printsleep=printsleep, make_bold=make_bold, make_match=make_match, make_no_match=make_no_match)
     sleep_time = max(2, REFRESH_RATE_IN_SECONDS - int(time.time() - cur_time))
     printsleep(f'Sleeping for {timedelta(seconds=sleep_time)}, next update at {datetime.now() + timedelta(seconds=sleep_time)}...')
     time.sleep(sleep_time)
@@ -176,7 +176,7 @@ def refresh_sleep(cleartext, alert, printline, printsleep, make_bold, make_red, 
 
 def refresh_sleep_console():
     refresh_sleep(cleartext=cleartext_console, alert=alert_console, printline=printline_console, printsleep=printline_console,
-                  make_bold=make_bold_console, make_red=make_red_console, make_green=make_green_console)
+                  make_bold=make_bold_console, make_match=make_green_console, make_no_match=make_red_console)
 
 
 if __name__ == '__main__':
