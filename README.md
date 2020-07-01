@@ -4,3 +4,8 @@
 [![Run on Repl.it](https://repl.it/badge/github/JasonGross/reddit-watcher)](https://repl.it/github/JasonGross/reddit-watcher)
 
 Reddit watcher script, made for a friend
+
+Prebuilt binaries:
+- [Windows](https://github.com/JasonGross/reddit-watcher/raw/gh-pages/windows-latest/watch.exe)
+- [Linux](https://github.com/JasonGross/reddit-watcher/raw/gh-pages/ubuntu-latest/watch)
+- [Mac OS](https://github.com/JasonGross/reddit-watcher/raw/gh-pages/macos-latest/watch)
